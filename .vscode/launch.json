@@ -1,0 +1,16 @@
+{
+	"version": "02.00",
+	"configurations": [
+		{
+			"name": "Python: Debug FastAPI",
+			"type": "debugpy",
+			"request": "launch",
+			"module": "uvicorn",
+			"args": ["app.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000"],
+			"cwd": "${workspaceFolder}/src/backend",
+			"envFile": "${workspaceFolder}/src/backend/.env.dev",
+			"jinja": true,
+			"justMyCode": true
+		}
+	]
+}

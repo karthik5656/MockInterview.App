@@ -1,0 +1,87 @@
+# ============================================
+# Environment & Secrets (Never commit credentials!)
+# ============================================
+.env
+.env.dev
+.env.*
+!.env.example
+
+# ============================================
+# Python Virtual Environments
+# ============================================
+fastapi-env/
+venv/
+.venv/
+env/
+ENV/
+
+# ============================================
+# Python Bytecode & Cache
+# ============================================
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ============================================
+# Testing & Coverage
+# ============================================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# ============================================
+# Audio & Whisper ML Model Caches
+# ============================================
+*.webm
+*.wav
+*.ogg
+*.mp3
+*.m4a
+# Hugging Face / faster-whisper local cache
+models/
+huggingface/
+.cache/
+
+# ============================================
+# Frontend (React / Vite / Next.js)
+# ============================================
+node_modules/
+.next/
+out/
+dist/
+.npm
+.yarn/
+*.tsbuildinfo
+
+# ============================================
+# IDEs & System Files
+# ============================================
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
