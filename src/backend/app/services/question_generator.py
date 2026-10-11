@@ -1,8 +1,8 @@
 import asyncio
 import json
 import logging
-from typing import Any, Dict, List, Optional
-from openai import AsyncAzureOpenAI, APIConnectionError, RateLimitError, APITimeoutError, InternalServerError
+from typing import Any, Dict, List, Optional, Union
+from openai import AsyncAzureOpenAI, AsyncOpenAI, APIConnectionError, RateLimitError, APITimeoutError, InternalServerError
 
 from app.core.config import settings
 from app.core.logging import logger
@@ -11,18 +11,32 @@ from app.services.document_parser import DocumentParser
 
 
 class QuestionGenerator:
-    """Service to generate dynamic interview questions using Azure OpenAI (gpt-4o-mini)."""
+    """Service to generate dynamic interview questions using Azure OpenAI / Azure AI Foundry."""
 
     def __init__(self):
-        self._client: Optional[AsyncAzureOpenAI] = None
+        self._client: Optional[Union[AsyncAzureOpenAI, AsyncOpenAI]] = None
 
-    def _get_client(self) -> AsyncAzureOpenAI:
+    def _get_client(self) -> Union[AsyncAzureOpenAI, AsyncOpenAI]:
         if self._client is None:
-            self._client = AsyncAzureOpenAI(
-                api_key=settings.AZURE_OPENAI_API_KEY,
-                azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
-                api_version=settings.AZURE_OPENAI_API_VERSION,
-            )
+            raw_endpoint = (settings.AZURE_OPENAI_ENDPOINT or "").strip()
+            endpoint = raw_endpoint.rstrip("/")
+
+            # Check if this is an Azure AI Foundry services endpoint (v1 REST API)
+            if "services.ai.azure.com" in endpoint or endpoint.endswith("/v1") or "/openai/v1" in endpoint:
+                base_url = endpoint if endpoint.endswith("/v1") else f"{endpoint}/openai/v1"
+                logger.info("Initializing AsyncOpenAI client for Azure AI Foundry endpoint: %s", base_url)
+                self._client = AsyncOpenAI(
+                    base_url=base_url,
+                    api_key=settings.AZURE_OPENAI_API_KEY,
+                    default_headers={"api-key": settings.AZURE_OPENAI_API_KEY},
+                )
+            else:
+                logger.info("Initializing AsyncAzureOpenAI client for endpoint: %s", endpoint)
+                self._client = AsyncAzureOpenAI(
+                    api_key=settings.AZURE_OPENAI_API_KEY,
+                    azure_endpoint=endpoint,
+                    api_version=settings.AZURE_OPENAI_API_VERSION,
+                )
         return self._client
 
     def _is_placeholder_config(self) -> bool:

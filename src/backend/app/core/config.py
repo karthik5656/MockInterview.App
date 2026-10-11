@@ -3,6 +3,11 @@ from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+from pathlib import Path
+
+BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+
+
 class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "INFO"
@@ -20,7 +25,7 @@ class Settings(BaseSettings):
     AZURE_OPENAI_API_KEY: str = ""
     AZURE_OPENAI_ENDPOINT: str = ""
     AZURE_OPENAI_DEPLOYMENT_NAME: str = "gpt-4o-mini"
-    AZURE_OPENAI_API_VERSION: str = "2024-02-15-preview"
+    AZURE_OPENAI_API_VERSION: str = "2024-08-01-preview"
 
     # Azure Queue
     AZURE_STORAGE_CONNECTION_STRING: str = ""
@@ -34,7 +39,7 @@ class Settings(BaseSettings):
         return v
 
     model_config = SettingsConfigDict(
-        env_file=".env.dev",
+        env_file=(str(BACKEND_DIR / ".env.dev"), ".env.dev", ".env"),
         env_file_encoding="utf-8",
         extra="ignore"
     )

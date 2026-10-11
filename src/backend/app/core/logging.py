@@ -2,6 +2,8 @@ import logging
 import sys
 from app.core.config import settings
 
+logger = logging.getLogger("mockinterview")
+
 
 def setup_logging() -> None:
     log_level = getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO)
@@ -11,3 +13,7 @@ def setup_logging() -> None:
         handlers=[logging.StreamHandler(sys.stdout)],
         force=True,
     )
+
+
+def get_logger(name: str = "mockinterview") -> logging.Logger:
+    return logging.getLogger(name)
