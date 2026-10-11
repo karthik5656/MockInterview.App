@@ -58,9 +58,10 @@ coverage.xml
 *.mp3
 *.m4a
 # Hugging Face / faster-whisper local cache
-models/
+/models/
 huggingface/
 .cache/
+!src/backend/app/models/
 
 # ============================================
 # Frontend (React / Vite / Next.js)
