@@ -9,6 +9,7 @@ from app.core.config import settings
 from app.core.database import get_db, engine
 from app.core.logging import setup_logging
 from app.api.v1.api import api_router
+from app.services.transcription_service import transcription_service
 from app.api.errors import (
     AppException,
     app_exception_handler,
@@ -20,6 +21,8 @@ from app.api.errors import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_logging()
+    # Preload speech-to-text model once at server startup
+    transcription_service.load_model()
     yield
     # Dispose connection pool cleanly on shutdown
     await engine.dispose()
